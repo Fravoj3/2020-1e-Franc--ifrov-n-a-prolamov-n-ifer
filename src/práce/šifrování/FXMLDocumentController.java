@@ -51,13 +51,14 @@ public class FXMLDocumentController implements Initializable {
     Abeceda nahled = new Abeceda();
     HashMap<String, String> sifra = new HashMap<String, String>();
     Porovnavac srovnani;
-
+    
+    //stavy 
 
     @FXML
     private GridPane zasifrovaniAbeceda;
 
     @FXML
-    private GridPane sesifraceSeznamVybrani;
+    private GridPane desifraceSeznamVybrani;
 
     @FXML
     private GridPane tabulkaDesifrace;
@@ -127,12 +128,18 @@ public class FXMLDocumentController implements Initializable {
 
     @FXML
     private ListView<String> listReferencnichTextu;
-    
+
     @FXML
     private ListView<String> bigram;
-    
+
     @FXML
     private ListView<String> trigram;
+
+    @FXML
+    private ListView<String> bigram1;
+
+    @FXML
+    private ListView<String> trigram1;
 
     @FXML
     private ListView<String> listReferencnichTextu1;
@@ -213,13 +220,15 @@ public class FXMLDocumentController implements Initializable {
         }
         infoRadek.setText("Analýza dokončena");
         for (int j = 0; j < analyza.bigram.size(); j++) {
-            if(!analyza.bigram.get(j).getZnak().contains(" "))
-            bigram.getItems().add(analyza.bigram.get(j).getZnak());
+            if (!analyza.bigram.get(j).getZnak().contains(" ")) {
+                bigram.getItems().add(analyza.bigram.get(j).getZnak()+" ("+analyza.bigram.get(j).getPocet()+")");
+            }
         }
-        
+
         for (int j = 0; j < analyza.trigram.size(); j++) {
-            if(!analyza.trigram.get(j).getZnak().contains(" "))
-            trigram.getItems().add(analyza.trigram.get(j).getZnak());
+            if (!analyza.trigram.get(j).getZnak().contains(" ")) {
+                trigram.getItems().add(analyza.trigram.get(j).getZnak());
+            }
         }
     }
 
@@ -251,6 +260,8 @@ public class FXMLDocumentController implements Initializable {
     @FXML
     void buttAnalyzovatRef1(ActionEvent event) throws UnsupportedEncodingException, IOException {
         infoRadek.setText("Analyzuji text...");
+        bigram1.getItems().clear();
+        trigram1.getItems().clear();
         tabulka1.getItems().clear();
         graf1.getData().clear();
         try {
@@ -290,16 +301,27 @@ public class FXMLDocumentController implements Initializable {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        for (int j = 0; j < zasifrovane[0].bigram.size(); j++) {
+                bigram1.getItems().add(zasifrovane[0].bigram.get(j).getZnak()+" ("+zasifrovane[0].bigram.get(j).getPocet()+")");
+        }
+
+        for (int j = 0; j < zasifrovane[0].trigram.size(); j++) {
+            if (!zasifrovane[0].trigram.get(j).getZnak().contains(" ")) {
+                trigram1.getItems().add(zasifrovane[0].trigram.get(j).getZnak());
+            }
+        }
         infoRadek.setText("Analýza dokončena");
     }
+
     //-----------------     Desifrace
     @FXML
     void najitPodobnosti(ActionEvent event) throws InterruptedException {
+        if(zasifrovane[0].getPocetZnaku() != 0&&analyza.getPocetZnaku()!=0){
         tabulkaDesifrace.getChildren().clear();
         infoRadek.setText("Hledám podobnosti...");
         srovnani = new Porovnavac(analyza, zasifrovane[0], tabulkaDesifrace);
         srovnani.porovnej();
-        
+
         try {
             nahled.nacti("zasifrovane");
             sifra = srovnani.setSifra(sifra);
@@ -318,25 +340,35 @@ public class FXMLDocumentController implements Initializable {
             bt.setStyle("-fx-background-color: none; -fx-border-width: 0;");
             tabulkaDesifrace.add(bt, j + 1, 0);
         }
-        /*for (int j = 0; j < analyza.znaky.size(); j++) {
+        for (int j = 0; j < analyza.znaky.size(); j++) {
             Button bt = new Button("(" + String.valueOf(analyza.znaky.get(j).getZnak()) + ")");
             bt.setMinWidth(40);
             bt.setStyle("-fx-background-color: none; -fx-border-width: 0;");
             tabulkaDesifrace.add(bt, 0, j + 1);
-        }*/
+        }
         try {
             srovnani.vykresli();
         } catch (IOException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         infoRadek.setText("Podobnosti nalezeny");
+        }
+        else{
+            infoRadek.setText("Chybí zanalyzované podklady");
+        }
     }
+
     @FXML
     void updateNahleduDesifrace(ActionEvent event) {
+        if(sifra.size() != 0){
         sifra = srovnani.setSifra(sifra);
-        
+
         UpdateNahledDesifrace(sifra);
+        }else{
+            infoRadek.setText("Nejprve nutné nalézt podobnosti");
+        }
     }
+
     //--------------------------------    Zasifrovani     ----------------------
     //-----------------     Import
     @FXML
@@ -355,11 +387,13 @@ public class FXMLDocumentController implements Initializable {
         }
         UpdateListImportKZasifrovani();
     }
+
     @FXML
     void vymazatKZasifrovani(ActionEvent event) {
         smazatSlozku("import");
         UpdateListImportKZasifrovani();
     }
+
     //-----------------     ziskani abecedy
     @FXML
     public void zjistiAbecedu(ActionEvent event) {
@@ -373,7 +407,7 @@ public class FXMLDocumentController implements Initializable {
                 for (int j = 0; j < text.getZnaky().size(); j++) {
                     chb.getItems().add(String.valueOf(text.getZnaky().get(j).znak));
                 }
-                sesifraceSeznamVybrani.add(chb, 2, i + 1);
+                desifraceSeznamVybrani.add(chb, 2, i + 1);
             }
 
             for (int i = 0; i < text.getZnaky().size(); i++) {
@@ -397,9 +431,10 @@ public class FXMLDocumentController implements Initializable {
             infoRadek.setText("Soubor se nepodařilo načíst");
         }
     }
+
     @FXML
     public void nahodneZasifruj(ActionEvent event) {
-        sesifraceSeznamVybrani.getChildren().clear();
+        desifraceSeznamVybrani.getChildren().clear();
         ArrayList<Znak> kProhazeni = (ArrayList<Znak>) text.getZnaky().clone();
         for (int i = 0; i < text.getZnaky().size(); i++) {
             Random random = new Random();
@@ -411,14 +446,16 @@ public class FXMLDocumentController implements Initializable {
             for (int j = 0; j < text.getZnaky().size(); j++) {
                 chb.getItems().add(String.valueOf(text.getZnaky().get(j).znak));
             }
-            sesifraceSeznamVybrani.add(chb, 2, i + 1);
+            desifraceSeznamVybrani.add(chb, 2, i + 1);
             text.getZnaky().get(i).setSifrovatNa(kProhazeni.get(indexZmeny).znak);
             kProhazeni.remove(indexZmeny);
         }
     }
+
     //-----------------     Export
     @FXML
     public void zasifrovaneExport(ActionEvent event) {
+        if(text.znaky.size() != 0){
         try {
             text.ulozit();
             infoRadek.setText("Soubor byl úspěšně uložen");
@@ -427,7 +464,9 @@ public class FXMLDocumentController implements Initializable {
         } catch (IOException ex) {
             infoRadek.setText("Soubor se nepodařilo uložit");
         }
+        }
     }
+
     @FXML
     public void sifrovat(ActionEvent event) {
         try {
@@ -439,7 +478,6 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
-    
     void TabulkaVolani() {
 
     }
@@ -487,8 +525,6 @@ public class FXMLDocumentController implements Initializable {
         }
     }
 
-    
-
     void smazatSlozku(String slozka) {
         String[] soubory = new File(slozka).list();
         for (int i = 0; i < soubory.length; i++) {
@@ -498,7 +534,7 @@ public class FXMLDocumentController implements Initializable {
 
     public void UpdateNahledDesifrace(HashMap<String, String> sifra) {
         try {
-            nahledDesifrace.setText(nahled.getNahled("zasifrovane",sifra));
+            nahledDesifrace.setText(nahled.getNahled("zasifrovane", sifra));
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
