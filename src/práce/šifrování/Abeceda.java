@@ -48,6 +48,8 @@ public class Abeceda {
             while (line != null) {
                 char[] linePole = line.toCharArray();
                 for (int a = 0; a < linePole.length; a++) {
+                    if(Character.isLetterOrDigit(linePole[a])){
+                        linePole[a] = Character.toLowerCase(linePole[a]);
                     boolean existuje = false;
                     for (int j = 0; j < znaky.size(); j++) {
                         if (znaky.get(j).getZnak() == linePole[a]) {
@@ -58,9 +60,13 @@ public class Abeceda {
                     if (!existuje) {
                         znaky.add(new Znak(linePole[a]));
                     }
+                    }
                 }
                 line = ctecka.readLine();
             }
+            fis.close();
+            isr.close();
+            ctecka.close();
         }
 
         System.out.println("Dokonceni");
@@ -100,9 +106,12 @@ public class Abeceda {
             while (line != null) {
                 char[] radek = line.toCharArray();
                 for(int j=0;j<radek.length;j++){
+                    if(Character.isLetterOrDigit(radek[j])){
+                        radek[j] = Character.toLowerCase(radek[j]);
                     pocetKNahlednuti++;
                     vysledek = vysledek +sifra.get(String.valueOf(radek[j]));
                     System.out.println(String.valueOf(radek[j]));
+                    }
                 }
                 if(pocetKNahlednuti>1000){
                     break;
@@ -131,10 +140,13 @@ public class Abeceda {
             while (line != null) {
                 char[] radek = line.toCharArray();
                 for(int j=0;j<radek.length;j++){
+                    if(Character.isLetterOrDigit(radek[j])){
+                        radek[j] = Character.toLowerCase(radek[j]);
                     pocetKNahlednuti++;
                     vysledek = vysledek +sifra.get(String.valueOf(radek[j]));
                     if(pocetKNahlednuti>1000){
                     break;
+                    }
                     }
                 }
                 if(pocetKNahlednuti>1000){
@@ -166,9 +178,12 @@ public class Abeceda {
             while (line != null) {
                 char[] radek = line.toCharArray();
                 for(int j=0;j<radek.length;j++){
+                    if(Character.isLetterOrDigit(radek[j])){
+                        radek[j] = Character.toLowerCase(radek[j]);
                     pocetKNahlednuti++;
                     vysledek = vysledek +sifra.get(String.valueOf(radek[j]));
                     System.out.println(String.valueOf(radek[j]));
+                    }
                 }
                 if(pocetKNahlednuti>1000){
                     break;
@@ -208,8 +223,10 @@ public class Abeceda {
                 String vysledek = "";
                 char[] radek = line.toCharArray();
                 for(int j=0;j<radek.length;j++){
+                    if(Character.isLetterOrDigit(radek[j])){
+                        radek[j] = Character.toLowerCase(radek[j]);
                     vysledek = vysledek +sifra.get(String.valueOf(radek[j]));
-                    System.out.println(String.valueOf(radek[j]));
+                    }
                 }
                 fw.write(vysledek);
                 line = ctecka.readLine();
@@ -225,11 +242,61 @@ public class Abeceda {
                 // handle exception...
             }
         }
+        fis.close();
+        isr.close();
+        ctecka.close();
         }
         System.out.println("dokonceno...");
-        System.out.println(sifra.get("m"));
     }
+    public void ulozit(String slozka,HashMap<String, String> sifra) throws FileNotFoundException, UnsupportedEncodingException, IOException {
+        System.out.println(sifra);
+        File f = new File(slozka);
+        String[] soubory = f.list();
+        System.out.println("Zahajeni");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save file");
+        File dest = fileChooser.showSaveDialog(new Stage());
+        
+        System.out.println("ukladam");
+        for (int i = 0; i < soubory.length; i++) {
+            File kUlozeni = new File("export"+File.separator+soubory[i]+".txt");
+            FileWriter fw = new FileWriter(kUlozeni);
+            File soubor = new File(slozka + File.separator + soubory[i]);
+            FileInputStream fis = new FileInputStream(soubor);
+            InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
+            BufferedReader ctecka = new BufferedReader(isr);
+            String line = ctecka.readLine();
+            
 
+            while (line != null) {
+                String vysledek = "";
+                char[] radek = line.toCharArray();
+                for(int j=0;j<radek.length;j++){
+                    if(Character.isLetterOrDigit(radek[j])){
+                        radek[j] = Character.toLowerCase(radek[j]);
+                    vysledek = vysledek +sifra.get(String.valueOf(radek[j]));
+                    }
+                }
+                fw.write(vysledek);
+                line = ctecka.readLine();
+            }
+            fw.close();
+            
+        
+        if (dest != null) {
+            try {
+                Files.copy(kUlozeni.toPath(), dest.toPath());
+                kUlozeni.delete();
+            } catch (IOException ex) {
+                // handle exception...
+            }
+        }
+        fis.close();
+        isr.close();
+        ctecka.close();
+        }
+        System.out.println("dokonceno...");
+    }
     public ArrayList<Znak> getZnaky() {
         return znaky;
     }

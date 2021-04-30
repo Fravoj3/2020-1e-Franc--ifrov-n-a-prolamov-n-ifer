@@ -15,6 +15,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import static java.lang.Double.NaN;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,6 +39,10 @@ public class AnalyzaZnaku {
     }
 
     public void Analyzuj() throws FileNotFoundException, UnsupportedEncodingException, IOException {
+        znaky = new ArrayList<AnalyzaZnak>();
+        bigram = new ArrayList<Bigram>();
+        trigram = new ArrayList<Bigram>();
+
         File f = new File(slozka);
         soubory = f.list();
         System.out.println("Zahajeni");
@@ -44,9 +50,9 @@ public class AnalyzaZnaku {
             File soubor = new File(slozka + File.separator + soubory[i]);
             FileInputStream fis = new FileInputStream(soubor);
             FileReader reader = new FileReader(soubor);
-            int a = reader.read();
-            int b = reader.read();
-            int c = reader.read();
+            int a = getChar(reader);
+            int b = getChar(reader);
+            int c = getChar(reader);
             while (true) {
                 if (a == -1 || b == -1 || c == -1) {
                     break;
@@ -86,7 +92,7 @@ public class AnalyzaZnaku {
                 }
 
                 String trigramNyni = String.valueOf((char) znakPred) + String.valueOf((char) znak) + String.valueOf((char) znakPo);
-                if (!trigramNyni.contains(" ") && slozka.equals("knihy")) {
+                if ((!trigramNyni.contains(" ") && slozka.equals("knihy")) || !slozka.equals("knihy")) {
                     existuje = false;
                     for (int j = 0; j < trigram.size(); j++) {
                         if (trigram.get(j).getZnak().equals(trigramNyni)) {
@@ -102,7 +108,7 @@ public class AnalyzaZnaku {
 
                 a = b;
                 b = c;
-                c = reader.read();
+                c = getChar(reader);
             }
             /*InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
             System.out.println(new InputStreamReader(fis).getEncoding());
@@ -120,8 +126,36 @@ public class AnalyzaZnaku {
             } catch (IOException ex) {
                 Logger.getLogger(AnalyzaZnaku.class.getName()).log(Level.SEVERE, null, ex);
             }*/
+            fis.close();
+            reader.close();
         }
         System.out.println("Dokonceni");
+    }
+
+    int getChar(FileReader reader) {
+        try {
+            int vstup = reader.read();
+            if (slozka.equals("zasifrovane")) {
+                return vstup;
+            }
+            while (true) {
+                if (vstup == -1) {
+                    return -1;
+                }
+                if (vstup != -1) {
+                    if (Character.isLetterOrDigit((char) vstup)) {
+                        vstup = Character.toLowerCase(vstup);
+                        return vstup;
+                    }
+                }
+                vstup = reader.read();
+            }
+
+        } catch (IOException ex) {
+            System.out.println("Chyba cteni");
+        }
+
+        return -1;
     }
 
     void vytiskni() {

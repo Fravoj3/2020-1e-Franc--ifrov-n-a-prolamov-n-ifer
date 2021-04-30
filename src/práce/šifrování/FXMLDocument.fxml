@@ -149,6 +149,7 @@
                                              <items>
                                                 <Button fx:id="buttAnalyzovatRef11" minHeight="22.0" mnemonicParsing="false" onAction="#najitPodobnosti" prefHeight="35.0" prefWidth="169.0" style="-fx-background-color: orange;" text="Najít podobnosti" textAlignment="CENTER" />
                                                 <Button minHeight="22.0" mnemonicParsing="false" onAction="#updateNahleduDesifrace" prefHeight="35.0" prefWidth="169.0" style="-fx-background-color: orange;" text="Update nahledu" textAlignment="CENTER" />
+                                                <Button minHeight="22.0" mnemonicParsing="false" onAction="#desifraceExport" prefHeight="35.0" prefWidth="169.0" style="-fx-background-color: orange;" text="Exportovat dešifrované" textAlignment="CENTER" />
                                              </items>
                                           </ToolBar>
                                           <SplitPane dividerPositions="0.679144385026738" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="45.0">
