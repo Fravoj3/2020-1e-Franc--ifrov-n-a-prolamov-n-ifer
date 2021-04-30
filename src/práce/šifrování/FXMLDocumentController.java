@@ -5,9 +5,13 @@
  */
 package práce.šifrování;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -368,7 +372,21 @@ public class FXMLDocumentController implements Initializable {
             infoRadek.setText("Nejprve nutné nalézt podobnosti");
         }
     }
-
+    @FXML
+    void desifraceExport(ActionEvent event) {
+        if(sifra.size() != 0){
+            sifra = srovnani.setSifra(sifra);
+            try {
+                nahled.ulozit("zasifrovane", sifra);
+            } catch (UnsupportedEncodingException ex) {
+                infoRadek.setText("Ukládání se nezdařilo");
+            } catch (IOException ex) {
+                infoRadek.setText("Ukládání se nezdařilo");
+            }
+        }else{
+            infoRadek.setText("Nejprve nutné nalézt podobnosti");
+        }
+    }
     //--------------------------------    Zasifrovani     ----------------------
     //-----------------     Import
     @FXML
@@ -464,17 +482,23 @@ public class FXMLDocumentController implements Initializable {
         } catch (IOException ex) {
             infoRadek.setText("Soubor se nepodařilo uložit");
         }
+        }else{
+            infoRadek.setText("Nejprve je nutné nastavit šifrování");
         }
     }
 
     @FXML
     public void sifrovat(ActionEvent event) {
+        if(text.znaky.size() != 0){
         try {
             zasifrovatNahled.setText(text.getNahled());
         } catch (UnsupportedEncodingException ex) {
             infoRadek.setText("Chyba při šifrování");
         } catch (IOException ex) {
             infoRadek.setText("Chyba při šifrování");
+        }
+        }else{
+            infoRadek.setText("Nejprve je nutné nastavit šifrování");
         }
     }
 
