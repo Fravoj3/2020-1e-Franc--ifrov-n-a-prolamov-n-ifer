@@ -132,7 +132,7 @@
                                                          </columns>
                                                       </TableView>
                                                       <ListView fx:id="bigram1" prefHeight="500.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="920.0" />
-                                                      <ListView fx:id="trigram1" prefHeight="500.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="1500.0" />
+                                                      <ListView fx:id="trigram1" prefHeight="500.0" prefWidth="200.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="1450.0" />
                                                    </children>
                                                 </AnchorPane>
                                              </content>
