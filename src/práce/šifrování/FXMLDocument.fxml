@@ -122,7 +122,7 @@
                                                             <NumberAxis fx:id="procenta1" />
                                                          </yAxis>
                                                       </BarChart>
-                                                      <TableView fx:id="tabulka1" layoutX="13.0" layoutY="395.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="500.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="395.0">
+                                                      <TableView fx:id="tabulka1" layoutX="13.0" layoutY="395.0" maxHeight="500.0" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="500.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="395.0">
                                                          <columns>
                                                             <TableColumn fx:id="tabulkaZnak1" prefWidth="70.0" text="Znak" />
                                                             <TableColumn fx:id="tabulkaPocet1" prefWidth="132.0" text="Počet objevů v textu" />
@@ -131,8 +131,8 @@
                                                             <TableColumn fx:id="tabulkaZnakyPo1" prefWidth="195.0" text="Nejčastější nadcházející znaky" />
                                                          </columns>
                                                       </TableView>
-                                                      <ListView fx:id="bigram1" prefHeight="500.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="780.0" />
-                                                      <ListView fx:id="trigram1" prefHeight="500.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="1300.0" />
+                                                      <ListView fx:id="bigram1" prefHeight="500.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="920.0" />
+                                                      <ListView fx:id="trigram1" prefHeight="500.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="1500.0" />
                                                    </children>
                                                 </AnchorPane>
                                              </content>
