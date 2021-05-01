@@ -23,6 +23,7 @@ import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -55,9 +56,8 @@ public class FXMLDocumentController implements Initializable {
     Abeceda nahled = new Abeceda();
     HashMap<String, String> sifra = new HashMap<String, String>();
     Porovnavac srovnani;
-    
-    //stavy 
 
+    //stavy 
     @FXML
     private GridPane zasifrovaniAbeceda;
 
@@ -179,7 +179,34 @@ public class FXMLDocumentController implements Initializable {
     //-----------------     Analyza referencniho textu
     @FXML
     void buttAnalyzovatRef(ActionEvent event) throws UnsupportedEncodingException, IOException {
-        infoRadek.setText("Analyzuji text...");
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                Runnable updater = new Runnable() {
+
+                    @Override
+                    public void run() {
+                        infoRadek.setText("Analyzuji text...");
+                    }
+                };
+
+                while (true) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                    }
+
+                    // UI update is run on the Application thread
+                    Platform.runLater(updater);
+                }
+            }
+
+        });
+        // don't let thread prevent JVM shutdown
+        thread.setDaemon(true);
+        thread.start();
+
         tabulka.getItems().clear();
         bigram.getItems().clear();
         trigram.getItems().clear();
@@ -225,7 +252,7 @@ public class FXMLDocumentController implements Initializable {
         infoRadek.setText("Analýza dokončena");
         for (int j = 0; j < analyza.bigram.size(); j++) {
             if (!analyza.bigram.get(j).getZnak().contains(" ")) {
-                bigram.getItems().add(analyza.bigram.get(j).getZnak()+" ("+analyza.bigram.get(j).getPocet()+")");
+                bigram.getItems().add(analyza.bigram.get(j).getZnak() + " (" + analyza.bigram.get(j).getPocet() + ")");
             }
         }
 
@@ -306,7 +333,7 @@ public class FXMLDocumentController implements Initializable {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
         for (int j = 0; j < zasifrovane[0].bigram.size(); j++) {
-                bigram1.getItems().add(zasifrovane[0].bigram.get(j).getZnak()+" ("+zasifrovane[0].bigram.get(j).getPocet()+")");
+            bigram1.getItems().add(zasifrovane[0].bigram.get(j).getZnak() + " (" + zasifrovane[0].bigram.get(j).getPocet() + ")");
         }
 
         for (int j = 0; j < zasifrovane[0].trigram.size(); j++) {
@@ -320,61 +347,61 @@ public class FXMLDocumentController implements Initializable {
     //-----------------     Desifrace
     @FXML
     void najitPodobnosti(ActionEvent event) throws InterruptedException {
-        if(zasifrovane[0].getPocetZnaku() != 0&&analyza.getPocetZnaku()!=0){
-        tabulkaDesifrace.getChildren().clear();
-        infoRadek.setText("Hledám podobnosti...");
-        srovnani = new Porovnavac(analyza, zasifrovane[0], tabulkaDesifrace);
-        srovnani.porovnej();
+        if (zasifrovane[0].getPocetZnaku() != 0 && analyza.getPocetZnaku() != 0) {
+            tabulkaDesifrace.getChildren().clear();
+            infoRadek.setText("Hledám podobnosti...");
+            srovnani = new Porovnavac(analyza, zasifrovane[0], tabulkaDesifrace);
+            srovnani.porovnej();
 
-        try {
-            nahled.nacti("zasifrovane");
-            sifra = srovnani.setSifra(sifra);
-            System.out.println(sifra);
-            UpdateNahledDesifrace(sifra);
+            try {
+                nahled.nacti("zasifrovane");
+                sifra = srovnani.setSifra(sifra);
+                System.out.println(sifra);
+                UpdateNahledDesifrace(sifra);
 
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        for (int j = 0; j < zasifrovane[0].znaky.size(); j++) {
-            Button bt = new Button("(" + String.valueOf(zasifrovane[0].znaky.get(j).getZnak()) + ")");
-            bt.setMinWidth(40);
-            bt.setStyle("-fx-background-color: none; -fx-border-width: 0;");
-            tabulkaDesifrace.add(bt, j + 1, 0);
-        }
-        for (int j = 0; j < analyza.znaky.size(); j++) {
-            Button bt = new Button("(" + String.valueOf(analyza.znaky.get(j).getZnak()) + ")");
-            bt.setMinWidth(40);
-            bt.setStyle("-fx-background-color: none; -fx-border-width: 0;");
-            tabulkaDesifrace.add(bt, 0, j + 1);
-        }
-        try {
-            srovnani.vykresli();
-        } catch (IOException ex) {
-            Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        infoRadek.setText("Podobnosti nalezeny");
-        }
-        else{
+            for (int j = 0; j < zasifrovane[0].znaky.size(); j++) {
+                Button bt = new Button("(" + String.valueOf(zasifrovane[0].znaky.get(j).getZnak()) + ")");
+                bt.setMinWidth(40);
+                bt.setStyle("-fx-background-color: none; -fx-border-width: 0;");
+                tabulkaDesifrace.add(bt, j + 1, 0);
+            }
+            for (int j = 0; j < analyza.znaky.size(); j++) {
+                Button bt = new Button("(" + String.valueOf(analyza.znaky.get(j).getZnak()) + ")");
+                bt.setMinWidth(40);
+                bt.setStyle("-fx-background-color: none; -fx-border-width: 0;");
+                tabulkaDesifrace.add(bt, 0, j + 1);
+            }
+            try {
+                srovnani.vykresli();
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            infoRadek.setText("Podobnosti nalezeny");
+        } else {
             infoRadek.setText("Chybí zanalyzované podklady");
         }
     }
 
     @FXML
     void updateNahleduDesifrace(ActionEvent event) {
-        if(sifra.size() != 0){
-        sifra = srovnani.setSifra(sifra);
+        if (sifra.size() != 0) {
+            sifra = srovnani.setSifra(sifra);
 
-        UpdateNahledDesifrace(sifra);
-        }else{
+            UpdateNahledDesifrace(sifra);
+        } else {
             infoRadek.setText("Nejprve nutné nalézt podobnosti");
         }
     }
+
     @FXML
     void desifraceExport(ActionEvent event) {
-        if(sifra.size() != 0){
+        if (sifra.size() != 0) {
             sifra = srovnani.setSifra(sifra);
             try {
                 nahled.ulozit("zasifrovane", sifra);
@@ -383,10 +410,11 @@ public class FXMLDocumentController implements Initializable {
             } catch (IOException ex) {
                 infoRadek.setText("Ukládání se nezdařilo");
             }
-        }else{
+        } else {
             infoRadek.setText("Nejprve nutné nalézt podobnosti");
         }
     }
+
     //--------------------------------    Zasifrovani     ----------------------
     //-----------------     Import
     @FXML
@@ -473,31 +501,31 @@ public class FXMLDocumentController implements Initializable {
     //-----------------     Export
     @FXML
     public void zasifrovaneExport(ActionEvent event) {
-        if(text.znaky.size() != 0){
-        try {
-            text.ulozit();
-            infoRadek.setText("Soubor byl úspěšně uložen");
-        } catch (UnsupportedEncodingException ex) {
-            infoRadek.setText("Soubor se nepodařilo uložit");
-        } catch (IOException ex) {
-            infoRadek.setText("Soubor se nepodařilo uložit");
-        }
-        }else{
+        if (text.znaky.size() != 0) {
+            try {
+                text.ulozit();
+                infoRadek.setText("Soubor byl úspěšně uložen");
+            } catch (UnsupportedEncodingException ex) {
+                infoRadek.setText("Soubor se nepodařilo uložit");
+            } catch (IOException ex) {
+                infoRadek.setText("Soubor se nepodařilo uložit");
+            }
+        } else {
             infoRadek.setText("Nejprve je nutné nastavit šifrování");
         }
     }
 
     @FXML
     public void sifrovat(ActionEvent event) {
-        if(text.znaky.size() != 0){
-        try {
-            zasifrovatNahled.setText(text.getNahled());
-        } catch (UnsupportedEncodingException ex) {
-            infoRadek.setText("Chyba při šifrování");
-        } catch (IOException ex) {
-            infoRadek.setText("Chyba při šifrování");
-        }
-        }else{
+        if (text.znaky.size() != 0) {
+            try {
+                zasifrovatNahled.setText(text.getNahled());
+            } catch (UnsupportedEncodingException ex) {
+                infoRadek.setText("Chyba při šifrování");
+            } catch (IOException ex) {
+                infoRadek.setText("Chyba při šifrování");
+            }
+        } else {
             infoRadek.setText("Nejprve je nutné nastavit šifrování");
         }
     }

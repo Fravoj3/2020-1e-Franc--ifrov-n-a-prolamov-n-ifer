@@ -35,8 +35,5 @@ public class PráceŠifrování extends Application {
         launch(args);
         
     }
-    public void updateTabulkaPodobnosti(int x, int y, GridPane tabulkaDesifrace){
-        
-    }
     
 }
