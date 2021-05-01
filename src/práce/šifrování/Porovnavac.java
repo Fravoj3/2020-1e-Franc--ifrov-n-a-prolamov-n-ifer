@@ -331,8 +331,8 @@ public class Porovnavac {
         String id = source.getId();
         int x = Integer.parseInt(id.split(",")[0]);
         int y = Integer.parseInt(id.split(",")[1]);
-        tabulkaDesifrace.getChildren().get((sifra.znaky.size() + predloha.znaky.size()) + y + ((x) * predloha.znaky.size())).setStyle("-fx-background-color: orange;");
         tabulkaDesifrace.getChildren().get((sifra.znaky.size() + predloha.znaky.size()) + nejmensiId[x] + ((x) * predloha.znaky.size())).setStyle("-fx-background-color: none; -fx-border-width: 2;-fx-cursor: hand;-fx-border-radius: 0;");
+        tabulkaDesifrace.getChildren().get((sifra.znaky.size() + predloha.znaky.size()) + y + ((x) * predloha.znaky.size())).setStyle("-fx-background-color: orange;");
         nejmensiId[x] = y;
         System.out.println(x);
     }
