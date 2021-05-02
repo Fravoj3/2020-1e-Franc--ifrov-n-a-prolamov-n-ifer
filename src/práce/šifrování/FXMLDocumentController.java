@@ -179,33 +179,8 @@ public class FXMLDocumentController implements Initializable {
     //-----------------     Analyza referencniho textu
     @FXML
     void buttAnalyzovatRef(ActionEvent event) throws UnsupportedEncodingException, IOException {
-        Thread thread = new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-                Runnable updater = new Runnable() {
-
-                    @Override
-                    public void run() {
-                        infoRadek.setText("Analyzuji text...");
-                    }
-                };
-
-                while (true) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                    }
-
-                    // UI update is run on the Application thread
-                    Platform.runLater(updater);
-                }
-            }
-
-        });
-        // don't let thread prevent JVM shutdown
-        thread.setDaemon(true);
-        thread.start();
+        infoRadek.setText("Analyzuji text...");
 
         tabulka.getItems().clear();
         bigram.getItems().clear();
@@ -443,7 +418,7 @@ public class FXMLDocumentController implements Initializable {
     //-----------------     ziskani abecedy
     @FXML
     public void zjistiAbecedu(ActionEvent event) {
-        zasifrovaniAbeceda.setStyle("-fx-min-width: 150;");
+        zasifrovaniAbeceda.setStyle("-fx-min-width: 180;");
         try {
             text.nacti("import");
             text.serad();
