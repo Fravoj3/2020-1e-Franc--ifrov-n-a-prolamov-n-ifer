@@ -209,6 +209,8 @@ public class Abeceda {
         for (int i = 0; i < soubory.length; i++) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Ulozit "+soubory[i]);
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("TXT soubory (*.txt)", "*.txt"));
+            fileChooser.setInitialFileName(soubory[i]+" -dešifrováno");
             File dest = fileChooser.showSaveDialog(new Stage());
             if (dest != null) {
             File kUlozeni = new File("export" + File.separator + soubory[i] + ".txt");
@@ -259,6 +261,8 @@ public class Abeceda {
         for (int i = 0; i < soubory.length; i++) {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Ulozit "+soubory[i]);
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("TXT soubory (*.txt)", "*.txt"));
+            fileChooser.setInitialFileName(soubory[i]+" -dešifrováno");
             File dest = fileChooser.showSaveDialog(new Stage());
             if (dest != null) {
             File kUlozeni = new File("export" + File.separator + soubory[i] + ".txt");
