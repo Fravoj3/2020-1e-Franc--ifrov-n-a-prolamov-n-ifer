@@ -224,18 +224,25 @@ public class FXMLDocumentController implements Initializable {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        infoRadek.setText("Analýza dokončena");
+        
+        double pocetBigram = 0;
+        for (int k = 0; k < analyza.bigram.size(); k++) {
+            pocetBigram += analyza.bigram.get(k).getPocet();
+        }
         for (int j = 0; j < analyza.bigram.size(); j++) {
             if (!analyza.bigram.get(j).getZnak().contains(" ")) {
-                bigram.getItems().add(analyza.bigram.get(j).getZnak() + " (" + analyza.bigram.get(j).getPocet() + ")");
+                bigram.getItems().add(analyza.bigram.get(j).getZnak() + " ("+analyza.bigram.get(j).getPocet() * (100.0 / pocetBigram)+ "%))");
             }
         }
-
+        
+        double pocetTrigram = 0;
+        for (int k = 0; k < analyza.trigram.size(); k++) {
+            pocetTrigram += analyza.trigram.get(k).getPocet();
+        }
         for (int j = 0; j < analyza.trigram.size(); j++) {
-            if (!analyza.trigram.get(j).getZnak().contains(" ")) {
-                trigram.getItems().add(analyza.trigram.get(j).getZnak());
-            }
+                trigram.getItems().add(analyza.trigram.get(j).getZnak()+" ("+analyza.trigram.get(j).getPocet() * (100.0 / pocetTrigram)+"%)");
         }
+        infoRadek.setText("Analýza dokončena");
     }
 
     //-----------------     Vlozeni zasifrovaneho textu
@@ -307,14 +314,20 @@ public class FXMLDocumentController implements Initializable {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        for (int j = 0; j < zasifrovane[0].bigram.size(); j++) {
-            bigram1.getItems().add(zasifrovane[0].bigram.get(j).getZnak() + " (" + zasifrovane[0].bigram.get(j).getPocet() + ")");
+        double pocetBigram = 0;
+        for (int k = 0; k < zasifrovane[0].bigram.size(); k++) {
+            pocetBigram += zasifrovane[0].bigram.get(k).getPocet();
         }
-
+        for (int j = 0; j < zasifrovane[0].bigram.size(); j++) {
+            bigram1.getItems().add(zasifrovane[0].bigram.get(j).getZnak() + " ("+zasifrovane[0].bigram.get(j).getPocet() * (100.0 / pocetBigram)+ "%) (" + zasifrovane[0].bigram.get(j).getPocet() + ")");
+        }
+        
+        double pocetTrigram = 0;
+        for (int k = 0; k < zasifrovane[0].trigram.size(); k++) {
+            pocetTrigram += zasifrovane[0].trigram.get(k).getPocet();
+        }
         for (int j = 0; j < zasifrovane[0].trigram.size(); j++) {
-            if (!zasifrovane[0].trigram.get(j).getZnak().contains(" ")) {
-                trigram1.getItems().add(zasifrovane[0].trigram.get(j).getZnak());
-            }
+                trigram1.getItems().add(zasifrovane[0].trigram.get(j).getZnak() +" ("+zasifrovane[0].trigram.get(j).getPocet() * (100.0 / pocetTrigram)+"%)");
         }
         infoRadek.setText("Analýza dokončena");
     }
